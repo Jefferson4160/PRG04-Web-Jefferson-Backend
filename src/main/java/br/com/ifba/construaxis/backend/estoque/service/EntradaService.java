@@ -13,49 +13,41 @@ public class EntradaService {
     private final EntradaRepository entradaRepository;
     private final ItemRepository itemRepository;
 
-    // Injeção de Dependência
     public EntradaService(EntradaRepository entradaRepository, ItemRepository itemRepository) {
         this.entradaRepository = entradaRepository;
         this.itemRepository = itemRepository;
     }
 
     @Transactional
-    public Entrada registrarEntrada(Entrada entrada) throws Exception {
+    public Entrada registrarEntrada(Entrada entrada) {
 
-        // 1. Validação
         if (entrada.getQuantidadeEntrada() == null || entrada.getQuantidadeEntrada() <= 0) {
             throw new IllegalArgumentException("A quantidade de entrada deve ser maior que zero.");
         }
-        if (entrada.getItemId() == null || entrada.getFornecedorId() == null) {
-            throw new IllegalArgumentException("Item e Fornecedor são obrigatórios.");
-        }
 
-        // Calcula o valor total
+        // Calcula valor total da nota
         entrada.setValorTotal(entrada.getQuantidadeEntrada() * entrada.getValorUnitario());
 
-        // 2. Buscar o Item para Atualização
+        // Atualiza item (saldo e preço médio)
         Item item = itemRepository.findById(entrada.getItemId())
-                .orElseThrow(() -> new RuntimeException("Item não encontrado: " + entrada.getItemId()));
+                .orElseThrow(() -> new RuntimeException("Item não encontrado."));
 
-        // 3. Implementar a Lógica de Estoque (Cálculo de Saldo e Preço Médio)
-        Double oldSaldo = item.getSaldoAtual() != null ? item.getSaldoAtual() : 0.0;
-        Double oldPreco = item.getPrecoUnitarioMedio() != null ? item.getPrecoUnitarioMedio() : 0.0;
-        Double valorNovaEntrada = entrada.getQuantidadeEntrada() * entrada.getValorUnitario();
+        double saldoAnterior = item.getSaldoAtual() != null ? item.getSaldoAtual() : 0.0;
+        double precoAnterior = item.getPrecoUnitarioMedio() != null ? item.getPrecoUnitarioMedio() : 0.0;
 
-        Double novoSaldo = oldSaldo + entrada.getQuantidadeEntrada();
-        Double novoPreco = 0.0;
+        double novoSaldo = saldoAnterior + entrada.getQuantidadeEntrada();
 
-        if (novoSaldo > 0) {
-            // Formula do Preço Médio Ponderado:
-            novoPreco = ((oldSaldo * oldPreco) + valorNovaEntrada) / novoSaldo;
-        }
+        double novoPreco =
+                novoSaldo == 0
+                        ? entrada.getValorUnitario()
+                        : ((saldoAnterior * precoAnterior)
+                        + entrada.getValorTotal()) / novoSaldo;
 
-        // 4. Atualizar o Item
         item.setSaldoAtual(novoSaldo);
         item.setPrecoUnitarioMedio(novoPreco);
+
         itemRepository.save(item);
 
-        // 5. Salvar o Registro de Entrada
         return entradaRepository.save(entrada);
     }
 }

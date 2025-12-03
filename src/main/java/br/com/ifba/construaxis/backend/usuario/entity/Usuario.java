@@ -1,6 +1,6 @@
 package br.com.ifba.construaxis.backend.usuario.entity;
 
-import br.com.ifba.construaxis.backend.infraestructure.entity.PersistenceEntity;
+import br.com.ifba.construaxis.backend.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

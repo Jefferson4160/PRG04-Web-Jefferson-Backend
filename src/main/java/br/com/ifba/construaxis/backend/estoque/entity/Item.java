@@ -1,7 +1,7 @@
 package br.com.ifba.construaxis.backend.estoque.entity;
 
 // Importa a entidade base que está na pasta irmã
-import br.com.ifba.construaxis.backend.infraestructure.entity.PersistenceEntity;
+import br.com.ifba.construaxis.backend.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
