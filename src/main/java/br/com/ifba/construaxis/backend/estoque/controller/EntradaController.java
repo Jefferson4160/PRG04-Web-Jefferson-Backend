@@ -5,6 +5,7 @@ import br.com.ifba.construaxis.backend.estoque.dto.EntradaPostRequestDTO;
 import br.com.ifba.construaxis.backend.estoque.entity.Entrada;
 import br.com.ifba.construaxis.backend.estoque.mapper.EntradaMapper;
 import br.com.ifba.construaxis.backend.estoque.service.EntradaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +23,14 @@ public class EntradaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registrarEntrada(@RequestBody EntradaPostRequestDTO dto) {
-        try {
-            Entrada entrada = entradaMapper.toEntity(dto);
-            Entrada novaEntrada = entradaService.registrarEntrada(entrada);
-            EntradaGetResponseDTO response = entradaMapper.toDTO(novaEntrada);
+    public ResponseEntity<EntradaGetResponseDTO> registrarEntrada(
+            @Valid @RequestBody EntradaPostRequestDTO dto) {
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        Entrada entrada = entradaMapper.toEntity(dto);
+        Entrada novaEntrada = entradaService.registrarEntrada(entrada);
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno: " + e.getMessage());
-        }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(entradaMapper.toDTO(novaEntrada));
     }
 }
