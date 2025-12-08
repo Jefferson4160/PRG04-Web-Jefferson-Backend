@@ -6,6 +6,9 @@ import br.com.ifba.construaxis.backend.estoque.repository.EntradaRepository;
 import br.com.ifba.construaxis.backend.estoque.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 @Service
 public class EntradaService {
@@ -86,5 +89,11 @@ public class EntradaService {
         // ------------------ SALVA A ENTRADA ------------------
         return entradaRepository.save(entrada);
     }
+
+    // ------------------ PAGINAÇÃO ------------------
+    public Page<Entrada> listarEntradasPaginadas(Pageable pageable) {
+        return entradaRepository.findAll(pageable);
+    }
+
 
 }
