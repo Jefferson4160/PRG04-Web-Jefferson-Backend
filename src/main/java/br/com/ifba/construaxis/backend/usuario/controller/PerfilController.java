@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/perfis")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PerfilController {
 
     private final PerfilRepository perfilRepository;
