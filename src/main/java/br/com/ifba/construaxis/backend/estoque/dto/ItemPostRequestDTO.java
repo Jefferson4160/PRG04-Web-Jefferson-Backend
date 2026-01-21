@@ -3,37 +3,23 @@ package br.com.ifba.construaxis.backend.estoque.dto;
 import java.util.UUID;
 
 public class ItemPostRequestDTO {
-
     private String descricao;
     private UUID categoriaId;
     private UUID unidadeMedidaId;
+    private UUID criadoPorId; 
 
-    // Construtor padrão
     public ItemPostRequestDTO() {}
 
-    // Getters - 
-    public String getDescricao() {
-        return descricao;
-    }
+    // Getters e Setters
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String d) { this.descricao = d; }
 
-    public UUID getCategoriaId() {
-        return categoriaId;
-    }
+    public UUID getCategoriaId() { return categoriaId; }
+    public void setCategoriaId(UUID id) { this.categoriaId = id; }
 
-    public UUID getUnidadeMedidaId() {
-        return unidadeMedidaId;
-    }
+    public UUID getUnidadeMedidaId() { return unidadeMedidaId; }
+    public void setUnidadeMedidaId(UUID id) { this.unidadeMedidaId = id; }
 
-    // Setters
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public void setCategoriaId(UUID categoriaId) {
-        this.categoriaId = categoriaId;
-    }
-
-    public void setUnidadeMedidaId(UUID unidadeMedidaId) {
-        this.unidadeMedidaId = unidadeMedidaId;
-    }
+    public UUID getCriadoPorId() { return criadoPorId; }
+    public void setCriadoPorId(UUID id) { this.criadoPorId = id; }
 }
