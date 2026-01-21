@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
-    //Método que o Spring JPA implementa automaticamente (busca por nome)
-    List<Usuario> findByNomeCompletoContainingIgnoreCase(String nome);
+    // Busca o nome dentro da entidade Pessoa vinculada ao Usuario
+    List<Usuario> findByPessoaNomeContainingIgnoreCase(String nome);
 }

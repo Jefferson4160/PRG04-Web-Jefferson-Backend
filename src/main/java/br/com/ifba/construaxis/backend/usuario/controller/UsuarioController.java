@@ -1,5 +1,7 @@
 package br.com.ifba.construaxis.backend.usuario.controller;
 
+import br.com.ifba.construaxis.backend.usuario.dto.UsuarioPostRequestDTO;
+import br.com.ifba.construaxis.backend.usuario.entity.Pessoa;
 import br.com.ifba.construaxis.backend.usuario.entity.Usuario;
 import br.com.ifba.construaxis.backend.usuario.service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,22 @@ public class UsuarioController {
     public ResponseEntity<List<Usuario>> buscarPorNome(@RequestParam String nome) {
         List<Usuario> usuarios = usuarioService.findByNome(nome);
         return ResponseEntity.status(HttpStatus.OK).body(usuarios);
+    }
+
+    @PostMapping
+    public ResponseEntity<Usuario> cadastrar(@RequestBody UsuarioPostRequestDTO dto) {
+        Pessoa pessoa = new Pessoa();
+        pessoa.setNome(dto.getNome());
+        pessoa.setDocumento(dto.getDocumento());
+
+        Usuario usuario = new Usuario();
+        usuario.setLogin(dto.getLogin());
+        usuario.setSenha(dto.getSenha());
+
+        // Chama o service que ajustamos para lidar com Pessoa + Usuario + Perfil
+        Usuario novoUsuario = usuarioService.cadastrarUsuario(usuario, pessoa, dto.getPerfilId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
     }
 
 }
