@@ -40,4 +40,17 @@ public class UsuarioService {
     public List<Usuario> findByNome(String nome) {
         return usuarioRepository.findByPessoaNomeContainingIgnoreCase(nome);
     }
+
+    public Usuario verificarLogin(String login, String senha) {
+    // Busca o usuário ou lança erro se não existir
+    Usuario usuario = usuarioRepository.findByLogin(login)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+    // Compara a senha (como não usamos BCrypt ainda, é comparação direta)
+    if (!usuario.getSenha().equals(senha)) {
+        throw new RuntimeException("Senha incorreta!");
+    }
+
+    return usuario;
+}
 }

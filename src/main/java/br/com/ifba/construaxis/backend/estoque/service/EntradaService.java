@@ -1,99 +1,48 @@
 package br.com.ifba.construaxis.backend.estoque.service;
 
+import br.com.ifba.construaxis.backend.estoque.dto.EntradaGetResponseDTO;
+import br.com.ifba.construaxis.backend.estoque.dto.EntradaPostRequestDTO;
 import br.com.ifba.construaxis.backend.estoque.entity.Entrada;
 import br.com.ifba.construaxis.backend.estoque.entity.Item;
+import br.com.ifba.construaxis.backend.estoque.mapper.EntradaMapper;
 import br.com.ifba.construaxis.backend.estoque.repository.EntradaRepository;
 import br.com.ifba.construaxis.backend.estoque.repository.ItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 
 @Service
 public class EntradaService {
 
-    private final EntradaRepository entradaRepository;
-    private final ItemRepository itemRepository;
+    @Autowired
+    private EntradaRepository entradaRepository;
 
+    @Autowired
+    private ItemRepository itemRepository;
 
-    public EntradaService(EntradaRepository entradaRepository, ItemRepository itemRepository) {
-        this.entradaRepository = entradaRepository;
-        this.itemRepository = itemRepository;
-    }
+    @Autowired
+    private EntradaMapper entradaMapper; // Injetando o tradutor
 
     @Transactional
-    public Entrada registrarEntrada(Entrada entrada) {
+    public EntradaGetResponseDTO registrarEntrada(EntradaPostRequestDTO dto) {
+        // 1. Busca o item no banco
+        Item item = itemRepository.findById(dto.getItemId())
+                .orElseThrow(() -> new RuntimeException("Item não encontrado!"));
 
-        // ------------------ VALIDAÇÕES ------------------
+        // 2. Usa o Mapper para transformar DTO em Entidade
+        Entrada entrada = entradaMapper.toEntity(dto, item);
 
-        if (entrada.getItemId() == null) {
-            throw new IllegalArgumentException("O campo itemId é obrigatório.");
-        }
+        // 3. Salva no banco
+        Entrada entradaSalva = entradaRepository.save(entrada);
 
-        if (entrada.getFornecedorId() == null) {
-            throw new IllegalArgumentException("O campo fornecedorId é obrigatório.");
-        }
-
-        if (entrada.getAlmoxarifeId() == null) {
-            throw new IllegalArgumentException("O campo almoxarifeId é obrigatório.");
-        }
-
-        if (entrada.getDataEntrada() == null) {
-            throw new IllegalArgumentException("A data de entrada é obrigatória.");
-        }
-
-        if (entrada.getQuantidadeNf() == null || entrada.getQuantidadeNf() <= 0) {
-            throw new IllegalArgumentException("A quantidade da nota fiscal deve ser maior que zero.");
-        }
-
-        if (entrada.getQuantidadeEntrada() == null || entrada.getQuantidadeEntrada() <= 0) {
-            throw new IllegalArgumentException("A quantidade de entrada deve ser maior que zero.");
-        }
-
-        if (!entrada.getQuantidadeNf().equals(entrada.getQuantidadeEntrada())) {
-            throw new IllegalArgumentException("A quantidade da NF deve ser igual à quantidade de entrada.");
-        }
-
-        if (entrada.getValorUnitario() == null || entrada.getValorUnitario() <= 0) {
-            throw new IllegalArgumentException("O valor unitário deve ser maior que zero.");
-        }
-
-        // Converte nota fiscal vazia para null
-        if (entrada.getNotaFiscalRa() != null && entrada.getNotaFiscalRa().isBlank()) {
-            entrada.setNotaFiscalRa(null);
-        }
-
-        // ------------------ CÁLCULO DO VALOR TOTAL ------------------
-        entrada.setValorTotal(entrada.getQuantidadeEntrada() * entrada.getValorUnitario());
-
-        // ------------------ ATUALIZA ITEM ------------------
-        Item item = itemRepository.findById(entrada.getItemId())
-                .orElseThrow(() -> new RuntimeException("Item não encontrado."));
-
-        double saldoAnterior = item.getSaldoAtual() != null ? item.getSaldoAtual() : 0.0;
-        double precoAnterior = item.getPrecoUnitarioMedio() != null ? item.getPrecoUnitarioMedio() : 0.0;
-
-        double novoSaldo = saldoAnterior + entrada.getQuantidadeEntrada();
-
-        double novoPreco =
-                novoSaldo == 0
-                        ? entrada.getValorUnitario()
-                        : ((saldoAnterior * precoAnterior) + entrada.getValorTotal()) / novoSaldo;
-
-        item.setSaldoAtual(novoSaldo);
-        item.setPrecoUnitarioMedio(novoPreco);
-
-        itemRepository.save(item);
-
-        // ------------------ SALVA A ENTRADA ------------------
-        return entradaRepository.save(entrada);
+        // 4. Retorna o DTO de resposta para o Frontend
+        return entradaMapper.toGetResponseDTO(entradaSalva);
     }
 
-    // ------------------ PAGINAÇÃO ------------------
-    public Page<Entrada> listarEntradasPaginadas(Pageable pageable) {
-        return entradaRepository.findAll(pageable);
+    public List<EntradaGetResponseDTO> findAll() {
+        List<Entrada> entradas = entradaRepository.findAll();
+        return entradaMapper.toGetResponseDTOList(entradas);
     }
-
-
 }

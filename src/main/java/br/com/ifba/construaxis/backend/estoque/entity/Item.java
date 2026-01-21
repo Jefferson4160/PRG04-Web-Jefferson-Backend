@@ -1,29 +1,38 @@
 package br.com.ifba.construaxis.backend.estoque.entity;
 
-// Importa a entidade base que está na pasta irmã
 import br.com.ifba.construaxis.backend.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "itens")
-@Data
-@NoArgsConstructor
 public class Item extends PersistenceEntity {
 
-    @Column(name = "codigo")
-    private Long codigo;
-
-    @Column(name = "descricao")
+    @Column(nullable = false)
     private String descricao;
 
-    @Column(name = "unidade_medida")
-    private String unidadeMedida;
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
-    @Column(name = "saldo_atual")
-    private Double saldoAtual;
+    @ManyToOne
+    @JoinColumn(name = "unidade_id", nullable = false)
+    private UnidadeMedida unidadeMedida;
 
-    @Column(name = "preco_unitario_medio")
-    private Double precoUnitarioMedio;
+    @Column(name = "codigo", insertable = false, updatable = false)
+    private Integer codigo;
+
+    // Construtor padrão
+    public Item() {}
+
+    // GETTERS E SETTERS MANUAIS (Para resolver o erro do VS Code)
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+
+    public UnidadeMedida getUnidadeMedida() { return unidadeMedida; }
+    public void setUnidadeMedida(UnidadeMedida unidadeMedida) { this.unidadeMedida = unidadeMedida; }
+
+    public Integer getCodigo() { return codigo; }
 }

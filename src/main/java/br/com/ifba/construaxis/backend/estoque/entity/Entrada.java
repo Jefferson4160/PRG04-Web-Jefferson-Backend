@@ -2,42 +2,40 @@ package br.com.ifba.construaxis.backend.estoque.entity;
 
 import br.com.ifba.construaxis.backend.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "entradas")
-@Data
-@NoArgsConstructor
 public class Entrada extends PersistenceEntity {
 
-    @Column(name = "data_entrada")
-    private LocalDate dataEntrada;
+    @ManyToOne
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item item;
 
-    @Column(name = "item_id", nullable = false)
-    private UUID itemId;
+    @Column(nullable = false)
+    private Double quantidade;
 
-    @Column(name = "fornecedor_id", nullable = false)
-    private UUID fornecedorId;
+    @Column(name = "data_entrada", nullable = false)
+    private LocalDateTime dataEntrada;
 
-    @Column(name = "nota_fiscal_ra")
-    private String notaFiscalRa;
+    @Column(name = "numero_nota_fiscal")
+    private String numeroNotaFiscal;
 
-    @Column(name = "quantidade_nf")
-    private Double quantidadeNf;
+    // Construtor padrão
+    public Entrada() {
+        this.dataEntrada = LocalDateTime.now();
+    }
 
-    @Column(name = "quantidade_entrada")
-    private Double quantidadeEntrada;
+    // Getters e Setters Manuais (Para evitar erros no VS Code)
+    public Item getItem() { return item; }
+    public void setItem(Item item) { this.item = item; }
 
-    @Column(name = "valor_unitario")
-    private Double valorUnitario;
+    public Double getQuantidade() { return quantidade; }
+    public void setQuantidade(Double quantidade) { this.quantidade = quantidade; }
 
-    @Column(name = "valor_total", nullable = false)
-    private Double valorTotal;
+    public LocalDateTime getDataEntrada() { return dataEntrada; }
+    public void setDataEntrada(LocalDateTime dataEntrada) { this.dataEntrada = dataEntrada; }
 
-    @Column(name = "almoxarife_id")
-    private UUID almoxarifeId;
+    public String getNumeroNotaFiscal() { return numeroNotaFiscal; }
+    public void setNumeroNotaFiscal(String numeroNotaFiscal) { this.numeroNotaFiscal = numeroNotaFiscal; }
 }

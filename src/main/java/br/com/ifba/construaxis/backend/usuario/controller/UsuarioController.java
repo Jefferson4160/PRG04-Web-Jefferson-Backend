@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController // Define a classe como API REST
 @RequestMapping(path = "/usuarios") // Prefixo da URL: /usuarios
@@ -53,4 +54,12 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> login(@RequestBody Map<String, String> credenciais) {
+        String login = credenciais.get("login");
+        String senha = credenciais.get("senha");
+
+        Usuario usuario = usuarioService.verificarLogin(login, senha);
+        return ResponseEntity.ok(usuario);
+    }
 }
