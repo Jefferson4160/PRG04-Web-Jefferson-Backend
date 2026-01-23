@@ -1,7 +1,8 @@
 # Estágio de Build
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 COPY . .
-RUN chmod +x mvnw && ./mvnw clean install -DskipTests
+
+RUN chmod +x mvnw && ./mvnw clean install -Dmaven.test.skip=true
 
 # Estágio de Execução
 FROM eclipse-temurin:21-jre-jammy
