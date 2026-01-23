@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/fornecedores")
+@CrossOrigin(origins = "construaxis.netlify.app")
 public class FornecedorController {
 
     private final FornecedorService fornecedorService;

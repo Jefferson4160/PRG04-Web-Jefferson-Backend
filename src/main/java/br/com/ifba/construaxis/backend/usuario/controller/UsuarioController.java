@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController // Define a classe como API REST
 @RequestMapping(path = "/usuarios") // Prefixo da URL: /usuarios
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "construaxis.netlify.app")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;

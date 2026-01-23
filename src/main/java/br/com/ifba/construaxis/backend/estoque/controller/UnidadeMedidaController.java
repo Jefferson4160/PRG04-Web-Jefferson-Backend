@@ -4,6 +4,7 @@ import br.com.ifba.construaxis.backend.estoque.entity.UnidadeMedida;
 import br.com.ifba.construaxis.backend.estoque.service.UnidadeMedidaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/unidades-medida")
+@CrossOrigin(origins = "construaxis.netlify.app")
 public class UnidadeMedidaController {
 
     @Autowired

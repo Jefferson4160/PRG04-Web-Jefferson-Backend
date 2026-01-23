@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cnpj")
+@CrossOrigin(origins = "construaxis.netlify.app")
 public class CnpjController {
 
     private final CnpjService cnpjService;

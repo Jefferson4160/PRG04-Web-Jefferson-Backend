@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/entradas")
+@CrossOrigin(origins = "construaxis.netlify.app")
 public class EntradaController {
 
     @Autowired

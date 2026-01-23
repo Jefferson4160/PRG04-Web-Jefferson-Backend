@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/itens") 
-@CrossOrigin(origins = "http://localhost:3000") // Garante que o React consiga acessar
+@CrossOrigin(origins = "construaxis.netlify.app") // Garante que o React consiga acessar
 public class ItemController {
 
     @Autowired
