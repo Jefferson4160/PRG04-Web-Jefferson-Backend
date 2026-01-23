@@ -6,6 +6,7 @@ import br.com.ifba.construaxis.backend.parceiro.entity.Fornecedor;
 import br.com.ifba.construaxis.backend.parceiro.repository.FornecedorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 public class FornecedorService {
@@ -45,4 +46,9 @@ public class FornecedorService {
         // 5. Salva no Supabase
         return fornecedorRepository.save(novoFornecedor);
     }
+
+    public List<Fornecedor> findAll() {
+    // Chama o repositório que faz o select * no Supabase
+    return fornecedorRepository.findAll(); 
+}
 }

@@ -5,6 +5,7 @@ import br.com.ifba.construaxis.backend.parceiro.service.FornecedorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/fornecedores")
@@ -15,6 +16,12 @@ public class FornecedorController {
 
     public FornecedorController(FornecedorService fornecedorService) {
         this.fornecedorService = fornecedorService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Fornecedor>> findAll() {
+        // O ResponseEntity.ok envia o status 200 para o React
+        return ResponseEntity.ok(fornecedorService.findAll()); 
     }
 
     @PostMapping("/cadastrar-cnpj/{cnpj}")

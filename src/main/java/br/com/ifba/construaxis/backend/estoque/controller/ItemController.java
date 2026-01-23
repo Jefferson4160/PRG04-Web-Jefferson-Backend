@@ -23,8 +23,7 @@ public class ItemController {
     public ResponseEntity<List<Item>> findAll() {
         return ResponseEntity.ok(itemService.findAll());
     }
-
-    // 🚨 ROTA DE CADASTRO (A que está dando erro 404)
+    
     @PostMapping
     public ResponseEntity<Item> cadastrar(@RequestBody ItemPostRequestDTO dto) {
         Item novoItem = itemService.save(dto);
