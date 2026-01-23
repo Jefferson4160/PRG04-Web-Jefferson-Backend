@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/unidades-medida")
-@CrossOrigin(origins = "construaxis.netlify.app")
+@CrossOrigin(origins = {"http://localhost:3000", "https://construaxis.netlify.app"})
 public class UnidadeMedidaController {
 
     @Autowired

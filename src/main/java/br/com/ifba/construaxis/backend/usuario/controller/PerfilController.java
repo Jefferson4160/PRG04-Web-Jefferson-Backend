@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/perfis")
-@CrossOrigin(origins = "construaxis.netlify.app")
+@CrossOrigin(origins = {"http://localhost:3000", "https://construaxis.netlify.app"})
 public class PerfilController {
 
     private final PerfilRepository perfilRepository;
