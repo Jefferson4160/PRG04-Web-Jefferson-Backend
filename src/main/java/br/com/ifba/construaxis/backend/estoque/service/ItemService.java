@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ItemService {
@@ -63,5 +64,19 @@ public class ItemService {
         entityManager.refresh(item);
 
         return itemRepository.save(item);
+    }
+
+    public void delete(UUID id) {
+        itemRepository.deleteById(id);
+    }
+
+    public Item update(UUID id, ItemPostRequestDTO dto) {
+        // Busca o item atual no banco. Se não achar, lança um erro.
+        Item itemExistente = itemRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Material não encontrado com o ID: " + id));
+        // Atualiza apenas os campos necessários
+        itemExistente.setDescricao(dto.getDescricao());
+        
+        return itemRepository.save(itemExistente);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/itens") 
@@ -28,5 +29,16 @@ public class ItemController {
     public ResponseEntity<Item> cadastrar(@RequestBody ItemPostRequestDTO dto) {
         Item novoItem = itemService.save(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoItem);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable UUID id) {
+        itemService.delete(id);
+        return ResponseEntity.noContent().build(); // Retorna 204 (Sucesso sem conteúdo)
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Item> atualizar(@PathVariable UUID id, @RequestBody ItemPostRequestDTO dto) {
+        return ResponseEntity.ok(itemService.update(id, dto));
     }
 }

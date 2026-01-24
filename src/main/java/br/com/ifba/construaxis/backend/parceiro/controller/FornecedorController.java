@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/fornecedores")
@@ -28,5 +29,17 @@ public class FornecedorController {
     public ResponseEntity<Fornecedor> cadastrar(@PathVariable String cnpj) {
         Fornecedor fornecedor = fornecedorService.cadastrarPorCnpj(cnpj);
         return ResponseEntity.status(HttpStatus.CREATED).body(fornecedor);
+    }
+
+    @PostMapping
+    public ResponseEntity<Fornecedor> save(@RequestBody Fornecedor fornecedor) {
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(fornecedorService.save(fornecedor));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable UUID id) {
+        fornecedorService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

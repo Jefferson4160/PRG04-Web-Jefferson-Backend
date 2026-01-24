@@ -7,6 +7,7 @@ import br.com.ifba.construaxis.backend.parceiro.repository.FornecedorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FornecedorService {
@@ -50,5 +51,21 @@ public class FornecedorService {
     public List<Fornecedor> findAll() {
     // Chama o repositório que faz o select * no Supabase
     return fornecedorRepository.findAll(); 
+}
+
+
+@Transactional
+public Fornecedor save(Fornecedor fornecedor) {
+    // 1. Limpa o CNPJ se houver antes de salvar
+    if (fornecedor.getCnpj() != null) {
+        fornecedor.setCnpj(fornecedor.getCnpj().replaceAll("\\D", ""));
+    }
+    // 2. Salva o objeto completo enviado pelo formulário
+    return fornecedorRepository.save(fornecedor);
+}
+
+public void delete(UUID id) {
+    // O JpaRepository já tem o deleteById por padrão
+    fornecedorRepository.deleteById(id);
 }
 }
