@@ -11,27 +11,26 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/perfis")
+
 @CrossOrigin(origins = {"http://localhost:3000", "https://construaxis.netlify.app"})
 public class PerfilController {
-
+    
+    
     private final PerfilRepository perfilRepository;
 
     public PerfilController(PerfilRepository perfilRepository) {
         this.perfilRepository = perfilRepository;
     }
 
-    
-
     // --- POST: Criar um novo perfil ---
     @PostMapping
     public ResponseEntity<Perfil> criar(@RequestBody Perfil perfil) {
-        // Como herda de PersistenceEntity, o ID UUID será gerado no save
         Perfil novoPerfil = perfilRepository.save(perfil);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoPerfil);
     }
 
     // --- GET: Listar todos os perfis ---
-    @GetMapping
+    @GetMapping("/findall")
     public ResponseEntity<List<Perfil>> listarTodos() {
         return ResponseEntity.ok(perfilRepository.findAll());
     }
@@ -52,5 +51,16 @@ public class PerfilController {
         }
         perfilRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Perfil> atualizar(@PathVariable UUID id, @RequestBody Perfil dadosNovos) {
+        return perfilRepository.findById(id)
+                .map(perfil -> {
+                    perfil.setNome(dadosNovos.getNome());
+                    Perfil atualizado = perfilRepository.save(perfil);
+                    return ResponseEntity.ok(atualizado);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }

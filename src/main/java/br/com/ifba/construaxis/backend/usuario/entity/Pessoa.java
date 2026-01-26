@@ -1,5 +1,7 @@
 package br.com.ifba.construaxis.backend.usuario.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import br.com.ifba.construaxis.backend.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,5 +21,6 @@ public class Pessoa extends PersistenceEntity {
     private String nome;
 
     @Column(nullable = false, unique = true)
-    private String documento; // Pode ser o CPF ou RG, conforme o seu diagrama
+    @JsonProperty("cpf")
+    private String documento; 
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController // Define a classe como API REST
 @RequestMapping(path = "/usuarios") // Prefixo da URL: /usuarios
@@ -62,5 +63,18 @@ public class UsuarioController {
 
         Usuario usuario = usuarioService.verificarLogin(login, senha);
         return ResponseEntity.ok(usuario);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable UUID id, @RequestHeader("X-User-Id") UUID idLogado) {
+        usuarioService.delete(id, idLogado);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> atualizar(@PathVariable UUID id, @RequestBody Map<String, Object> dados) {
+        
+        Usuario usuarioAtualizado = usuarioService.update(id, dados);
+        return ResponseEntity.ok(usuarioAtualizado);
     }
 }
